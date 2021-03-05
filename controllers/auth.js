@@ -48,7 +48,7 @@ exports.signUp = async (req, res, next) => {
     console.log(error);
   }
 };
-// duck123
+
 exports.signIn = async (req, res, next) => {
   const { email, password } = req.body;
 

@@ -20,7 +20,6 @@ exports.validateSignUp = [
     }),
 ];
 
-// TODO Validate Edit Profile (username - 50 characters, role - 20 characters)
 exports.validateEditProfile = [
   body("username")
     .trim()
@@ -30,4 +29,15 @@ exports.validateEditProfile = [
     .trim()
     .isLength({ max: 20 })
     .withMessage("Role must be no more than 20 characters"),
+];
+
+exports.validateEditProject = [
+  body("title")
+    .trim()
+    .isLength({ min: 5, max: 50 })
+    .withMessage("Title must be between 5 and 50 characters"),
+  body("description")
+    .trim()
+    .isLength({ min: 10, max: 100 })
+    .withMessage("Description must be between 10 and 100 characters"),
 ];

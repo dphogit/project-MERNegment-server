@@ -35,6 +35,7 @@ const fileFilter = (req, file, cb) => {
 // Routes for middleware
 const authRoutes = require("./routes/auth");
 const homeRoutes = require("./routes/home");
+const projectRoutes = require("./routes/projects");
 
 app.use(cors());
 // app.use(express.urlencoded({ extended: true }));
@@ -49,6 +50,7 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 // Middleware Routes
 app.use("/auth", authRoutes);
 app.use("/home", homeRoutes);
+app.use("/projects", projectRoutes);
 
 // Error Handling
 
