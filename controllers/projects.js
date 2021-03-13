@@ -90,6 +90,86 @@ exports.editProject = async (req, res, next) => {
   }
 };
 
+exports.joinProject = async (req, res, next) => {
+  // Get project and user id's from params => check if they both exist => check if user exists in project.team => update/add to team
+  const { projectId, userId } = req.params;
+  try {
+    const project = await Project.findById(projectId).exec();
+    if (!project) {
+      return res
+        .status(404)
+        .json({ message: "No project with that id exists" });
+    }
+
+    const user = await User.findById(userId).exec();
+    if (!user) {
+      return res.status(404).json({ message: "No user with that id exists" });
+    }
+
+    if (project.team.includes(userId)) {
+      return res
+        .status(403)
+        .json({ message: "You are already in this project!" });
+    }
+
+    await User.findByIdAndUpdate(
+      userId,
+      { $push: { projects: [project] } },
+      { new: true }
+    ).exec();
+
+    await Project.findByIdAndUpdate(
+      projectId,
+      { $push: { team: [user] } },
+      { new: true }
+    ).exec();
+
+    return res.json({ message: "Joined Project Successfully!" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.leaveProject = async (req, res, next) => {
+  // Get project and user id's from params => check if they both exist => check if user does not exist in project.team => update/remove from team
+  const { projectId, userId } = req.params;
+  try {
+    const project = await Project.findById(projectId).exec();
+    if (!project) {
+      return res
+        .status(404)
+        .json({ message: "No project with that id exists" });
+    }
+
+    const user = await User.findById(userId).exec();
+    if (!user) {
+      return res.status(404).json({ message: "No user with that id exists" });
+    }
+
+    if (!project.team.includes(userId)) {
+      return res
+        .status(403)
+        .json({ message: "You are already not part of the project!" });
+    }
+
+    await User.findByIdAndUpdate(
+      userId,
+      { $pull: { projects: project._id } },
+      { new: true }
+    ).exec();
+
+    await Project.findByIdAndUpdate(
+      projectId,
+      { $pull: { team: user._id } },
+      { new: true }
+    ).exec();
+
+    return res.json({ message: "Project Left Successfully!" });
+  } catch {
+    console.log(error);
+  }
+};
+
 exports.deleteProject = async (req, res, next) => {
   const projectId = req.params.projectId;
   try {

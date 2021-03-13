@@ -18,9 +18,9 @@ const userSchema = new Schema(
     role: {
       type: String,
     },
-    tasks: {
-      type: [String],
-    },
+    // tasks: {
+    //   type: [String],
+    // },
     projects: {
       type: [{ type: Schema.Types.ObjectId, ref: "Project" }],
     },
